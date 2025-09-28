@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProductivityTracker</title>
+    <link rel="stylesheet" href="popup.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-animation">
+            <div class="loading-circle"></div>
+            <div class="loading-text">Loading...</div>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="app" class="app-container initially-hidden">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-chart-line"></i>
+                    <span>ProductivityTracker</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="nav-tabs">
+            <button class="tab-btn active" data-tab="dashboard">
+                <i class="fas fa-tachometer-alt"></i>
+                Dashboard
+            </button>
+            <button class="tab-btn" data-tab="focus">
+                <i class="fas fa-brain"></i>
+                Focus
+            </button>
+            <button class="tab-btn" data-tab="blocking">
+                <i class="fas fa-shield-alt"></i>
+                Blocking
+            </button>
+            <button class="tab-btn" data-tab="reports">
+                <i class="fas fa-chart-bar"></i>
+                Reports
+            </button>
+        </nav>
+
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content active">
+            <div class="dashboard-container">
+                <div class="dashboard-header">
+                    <div class="dashboard-indicator">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Dashboard</h3>
+                    <p class="dashboard-subtitle">Your productivity overview for today</p>
+                </div>
+                <div class="dashboard-content">
+                    <!-- Productivity Score -->
+                    <div class="score-card">
+                        <div class="score-header">
+                            <h4>Today's Productivity Score</h4>
+                            <button id="refreshBtn" class="refresh-btn">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                        <div class="score-display">
+                            <div class="score-circle">
+                                <svg class="score-svg" width="120" height="120">
+                                    <circle cx="60" cy="60" r="50" class="score-bg"></circle>
+                                    <circle cx="60" cy="60" r="50" class="score-fill" id="scoreCircle"></circle>
+                                </svg>
+                                <div class="score-text">
+                                    <span id="scoreValue">0</span>
+                                    <small>/100</small>
+                                </div>
+                            </div>
+                            <div class="score-info">
+                                <p id="scoreMessage">Start browsing to see your score!</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Productive Sites Section -->
+                    <div class="productive-sites-section">
+                        <h4>Productive Sites</h4>
+                        <p class="section-description">Add sites that boost your productivity</p>
+                        <div id="productiveSitesList" class="productive-sites-list">
+                            <!-- Productive sites will be populated here -->
+                        </div>
+                        <div class="add-site-section">
+                            <input type="text" id="productiveSiteInput" placeholder="Enter productive website (e.g., github.com)" class="site-input">
+                            <button id="addProductiveSiteBtn" class="add-site-btn">
+                                <i class="fas fa-plus"></i>
+                                Add Site
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Top Sites -->
+                    <div class="top-sites-card">
+                        <h4>Top Sites Today</h4>
+                        <div id="topSitesList" class="top-sites-list">
+                            <!-- Dynamic content -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Focus Tab -->
+        <div id="focus" class="tab-content">
+            <div class="focus-container">
+                <div class="focus-status" id="focusStatus">
+                    <div class="focus-indicator">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>Focus Mode</h3>
+                    <p id="focusStatusText">Ready to focus</p>
+                </div>
+
+                <div class="focus-controls" id="focusControls">
+                    <div class="duration-selector">
+                        <label>Focus Duration:</label>
+                        <div class="duration-buttons">
+                            <button class="duration-btn" data-duration="25">25m</button>
+                            <button class="duration-btn active" data-duration="50">50m</button>
+                            <button class="duration-btn" data-duration="90">90m</button>
+                            <button class="duration-btn" data-duration="120">2h</button>
+                        </div>
+                    </div>
+
+                    <div class="focus-sites">
+                        <label>Sites blocked during focus sessions:</label>
+                        <div id="focusBlockedSitesList" class="blocked-sites-list">
+                            <!-- Focus blocked sites will be populated here -->
+                        </div>
+                        <div class="add-site-section">
+                            <input type="text" id="focusSiteInput" placeholder="Enter website (e.g., youtube.com)" class="site-input">
+                            <button id="addFocusSiteBtn" class="add-site-btn">
+                                <i class="fas fa-plus"></i>
+                                Add Site
+                            </button>
+                        </div>
+                    </div>
+
+                    <button id="startFocusBtn" class="focus-action-btn start">
+                        <i class="fas fa-play"></i>
+                        Start Focus Session
+                    </button>
+                </div>
+
+                <div class="focus-timer initially-hidden" id="focusTimer">
+                    <div class="timer-circle">
+                        <svg width="200" height="200">
+                            <circle cx="100" cy="100" r="90" class="timer-bg"></circle>
+                            <circle cx="100" cy="100" r="90" class="timer-fill" id="timerCircle"></circle>
+                        </svg>
+                        <div class="timer-text">
+                            <div id="timerDisplay">25:00</div>
+                            <div class="timer-label">Focus Time</div>
+                        </div>
+                    </div>
+                    <button id="stopFocusBtn" class="focus-action-btn stop">
+                        <i class="fas fa-stop"></i>
+                        Stop Focus
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Blocking Tab -->
+        <div id="blocking" class="tab-content">
+            <div class="blocking-container">
+                <div class="blocking-header">
+                    <div class="blocking-indicator">
+                        <i class="fas fa-ban"></i>
+                    </div>
+                    <h3>Blocking Sites</h3>
+                    <p class="blocking-subtitle">Sites that are always blocked, regardless of focus mode</p>
+                </div>
+                <div class="blocking-content">
+                    <div class="add-site-section">
+                        <div class="input-group">
+                            <input type="text" id="newSiteInput" placeholder="Enter url (e.g., facebook.com)">
+                            <button id="addSiteBtn" class="add-btn">
+                                <i class="fas fa-plus"></i>
+                                Add
+                            </button>
+                        </div>
+                    </div>
+                    <div class="blocked-sites-list" id="blockedSitesList">
+                        <!-- Dynamic content -->
+                    </div>
+                    <div class="quick-add-section">
+                        <h4>Quick Add Popular Distracting Sites:</h4>
+                        <div class="quick-add-grid">
+                            <button class="quick-add-btn" data-site="youtube.com">
+                                <i class="fab fa-youtube"></i>
+                                YouTube
+                            </button>
+                            <button class="quick-add-btn" data-site="facebook.com">
+                                <i class="fab fa-facebook"></i>
+                                Facebook
+                            </button>
+                            <button class="quick-add-btn" data-site="instagram.com">
+                                <i class="fab fa-instagram"></i>
+                                Instagram
+                            </button>
+                            <button class="quick-add-btn" data-site="twitter.com">
+                                <i class="fab fa-twitter"></i>
+                                Twitter
+                            </button>
+                            <button class="quick-add-btn" data-site="reddit.com">
+                                <i class="fab fa-reddit"></i>
+                                Reddit
+                            </button>
+                            <button class="quick-add-btn" data-site="tiktok.com">
+                                <i class="fab fa-tiktok"></i>
+                                TikTok
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reports Tab -->
+        <div id="reports" class="tab-content">
+            <div class="reports-container">
+                <div class="reports-header">
+                    <div class="reports-indicator">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <h3>Reports</h3>
+                    <p class="reports-subtitle">Visualize your productivity and get insights</p>
+                </div>
+                <div class="reports-content">
+                    <div class="report-selector">
+                        <button class="report-btn active" data-period="day">Today</button>
+                        <button class="report-btn" data-period="week">This Week</button>
+                        <button class="report-btn" data-period="month">This Month</button>
+                    </div>
+                    <div class="report-content">
+                        <!-- Weekly Chart -->
+                        <div class="chart-card">
+                            <h4>Productivity Trend</h4>
+                            <div class="chart-container">
+                                <canvas id="productivityChart" width="300" height="150"></canvas>
+                            </div>
+                        </div>
+                        <!-- Time Distribution -->
+                        <div class="chart-card">
+                            <h4>Time Distribution</h4>
+                            <div class="chart-container">
+                                <canvas id="timeChart" width="300" height="150"></canvas>
+                            </div>
+                        </div>
+                        <!-- Insights -->
+                        <div class="insights-card">
+                            <h4>Insights & Recommendations</h4>
+                            <div id="insightsList" class="insights-list">
+                                <!-- Dynamic content -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="chart.min.js"></script>
+    <script src="popup.js"></script>
+</body>
+</html>

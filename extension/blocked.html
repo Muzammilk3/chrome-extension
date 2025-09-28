@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site Blocked - Stay Focused!</title>
+    <link rel="stylesheet" href="blocked.css">
+</head>
+<body>
+    <div class="container">
+        <div class="blocked-icon">
+            🚫
+        </div>
+        
+        <h1>Stay Focused!</h1>
+        <div class="site-name" id="siteName">This site is blocked</div>
+        
+        <div class="message">
+            You've blocked this site to help maintain your productivity. 
+            Use this time to work on your goals instead!
+        </div>
+
+        <div class="motivational-quotes">
+            <div class="quote" id="motivationalQuote">
+                "The way to get started is to quit talking and begin doing."
+            </div>
+            <div class="quote-author" id="quoteAuthor">- Walt Disney</div>
+        </div>
+
+        <div id="focusTimer" class="initially-hidden">
+            <div class="timer" id="timerDisplay">25:00</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <p>Focus session in progress...</p>
+        </div>
+
+        <div class="actions">
+            <button class="btn btn-primary" id="productivityBtn">
+                🚀 Go to Productive Site
+            </button>
+            <button class="btn btn-secondary" id="goBackBtn">
+                ← Go Back
+            </button>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-value" id="blockedToday">0</div>
+                <div class="stat-label">Blocked Today</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="timeSaved">0h</div>
+                <div class="stat-label">Time Saved</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="streakDays">0</div>
+                <div class="stat-label">Day Streak</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="blocked.js"></script>
+</body>
+</html>
